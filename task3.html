@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Ultimate Tic-Tac-Toe 🎮</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-color: #54f063;
+        }
+
+        .title {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+        }
+
+        .game-container {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 5px;
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 10px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            border: 2px solid #333;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background-color: #fff;
+            transition: background-color 0.3s ease;
+        }
+
+        .cell:hover {
+            background-color: #f0f0f0;
+        }
+
+        .cell.winning {
+            background-color: #8cff66;
+        }
+
+        .cell.winning:hover {
+            background-color: #7acc5b;
+        }
+    </style>
+</head>
+<body>
+    <div class="title">🎮 Ultimate Tic-Tac-Toe 🎮</div>
+    <div class="game-container" id="game-container">
+        <!-- Game cells will be dynamically added here -->
+    </div>
+
+    <script>
+        const playerX = 'X';
+        const playerO = 'O';
+
+        let currentPlayer = playerX;
+        let gameBoard = ['', '', '', '', '', '', '', '', ''];
+        let gameActive = true;
+
+        const gameContainer = document.getElementById('game-container');
+
+        for (let i = 0; i < 9; i++) {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+            cell.setAttribute('data-index', i);
+            cell.addEventListener('click', handleCellClick);
+            gameContainer.appendChild(cell);
+        }
+
+        function handleCellClick(event) {
+            const index = event.target.getAttribute('data-index');
+
+            if (gameBoard[index] === '' && gameActive) {
+                gameBoard[index] = currentPlayer;
+                event.target.textContent = currentPlayer;
+
+                if (checkWin()) {
+                    alert(`Player ${currentPlayer} wins!`);
+                    gameActive = false;
+                } else if (checkTie()) {
+                    alert('It\'s a tie!');
+                    gameActive = false;
+                } else {
+                    currentPlayer = currentPlayer === playerX ? playerO : playerX;
+                }
+            }
+        }
+
+        function checkWin() {
+            const winPatterns = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+                [0, 4, 8], [2, 4, 6]             // Diagonals
+            ];
+
+            return winPatterns.some(pattern => {
+                const [a, b, c] = pattern;
+                return gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c];
+            });
+        }
+
+        function checkTie() {
+            return !gameBoard.includes('');
+        }
+    </script>
+</body>
+</html>
